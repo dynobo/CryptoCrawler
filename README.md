@@ -1,12 +1,29 @@
-> **CryptoCrawler** - Crawling information about Crypto Currencies from the Web, analyze them and present them in a Web-Dashboard. A project from a course at university of media, stuttgart.
+# CryptoCrawler
 
-<br>
+***Description***<br>
+Microservice based Architecture for retrieving, analyzing and reporting data about Crypto-Currencies from Twitter and Stock-Information. The basic idea is to check the correlation of mentions on social media with the development of the stock market. The outcome indicates, that there is no obvious correlation. However, it might be possible that are correlations, that are just too weak to be detected by our rough & timeboxed prototyp.
 
-# Table of Contents
+***Context***<br>
+Master programme [Data Science & Business Analytics](https://www.hdm-stuttgart.de/ds/de/)<br>Lecture [Web- and Social-Media-Analytics](https://www.hdm-stuttgart.de/ds/de/weiterbildung/modul_11)<br>At [University of Media, Stuttgart (DE)](https://www.hdm-stuttgart.de/)
 
-<!-- TOC depthFrom:1 depthTo:2 withLinks:1 updateOnSave:1 orderedList:0 -->
+***Goal / Task***<br>
+Come up with a use-case for Social-Media- or Webanalytics and implement a Proof-of-Concept covering the whole process end-to-end, including data gathering, cleaning, analytics and reporting the results.
 
-- [Table of Contents](#table-of-contents)
+***Authors***<br>
+[kevhen](https://github.com/kevhen) and me ([dynobo](https://github.com/dynobo))
+
+***Timeline***<br>
+Dec. 2017 - Feb. 2018
+
+***Repo***<br>
+ Code for the Proof-of-Concept; Documentation; [Slides](https://gitpitch.com/dynobo/CryptoCrawler/master) of our final presentation.
+
+----
+
+**Table of Contents**
+<!-- TOC depthFrom:2 depthTo:3 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [Documentation & Presentation](#documentation-presentation)
 - [Architecture](#architecture)
 - [Setup AWS](#setup-aws)
 	- [VM Setup](#vm-setup)
@@ -15,12 +32,12 @@
 	- [Microservice 1: Mongo DB](#microservice-1-mongo-db)
 	- [Microservice 2: Twitter Stream Listener](#microservice-2-twitter-stream-listener)
 	- [Microservice 3: Crypto Price Crawler](#microservice-3-crypto-price-crawler)
-	- [Microservice 4: Crypto Api Wrapper](#microservice-9-crypto-api-wrapper)
-	- [Microservice 5: Jupyter Notebook](#microservice-4-jupyter-notebook)
-	- [Microservice 6: Dashboard](#microservice-5-dashboard)
-	- [Microservice 7: LDA Topic Identification](#microservice-6-lda-topic-identification)
-	- [Microservice 8: Anomaly Detection](#microservice-7-anomaly-detection)
-	- [Microservice 9: Sentiment Analysis](#microservice-8-sentiment-analysis)
+	- [Microservice 4: Crypto Api Wrapper](#microservice-4-crypto-api-wrapper)
+	- [Microservice 5: Jupyter Notebook](#microservice-5-jupyter-notebook)
+	- [Microservice 6: Dashboard](#microservice-6-dashboard)
+	- [Microservice 7: LDA Topic Identification](#microservice-7-lda-topic-identification)
+	- [Microservice 8: Anomaly Detection](#microservice-8-anomaly-detection)
+	- [Microservice 9: Sentiment Analysis](#microservice-9-sentiment-analysis)
 - [Useful info & commands](#useful-info-commands)
 	- [Docker](#docker)
 	- [Docker Compose](#docker-compose)
@@ -29,7 +46,7 @@
 
 <!-- /TOC -->
 
- # Documentation & Presentation
+## Documentation & Presentation
 
 **Documentation**
 
@@ -40,14 +57,14 @@
 **Presentation**
 
 - We use [GitPitch](https://gitpitch.com/), a Markdown Presentation Service
-- Access via: <https://gitpitch.com/kevhen/CryptoCrawler/master> ("master" can be replaced by other branch-name)
+- Access via: <https://gitpitch.com/dynobo/CryptoCrawler/master> ("master" can be replaced by other branch-name)
 - About Slide-Styling see [Wiki](https://github.com/gitpitch/gitpitch/wiki/Slideshow-Settings)
 
 **Dashboard**
 
 - See [Screenshot of Dashboard](screenshot_dashboard.png)
 
-# Architecture
+## Architecture
 
 **Microservice Architecture**
 
@@ -59,9 +76,9 @@
 
 - AWS (using free tier)
 
-# Setup AWS
+## Setup AWS
 
-## VM Setup
+### VM Setup
 
 - t2.medium
 - AMI: ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20171121.1 (ami-aa2ea6d0)
@@ -75,7 +92,7 @@
     - *tcp 5000 - Topic Modelling
     - *tcp 5001 - Anomaly Detection
 
-## Server Setup
+### Server Setup
 
 **Prepare & mount EBS Drive**
 
@@ -99,9 +116,9 @@
 }
 ```
 
-# Microservices
+## Microservices
 
-## Microservice 1: Mongo DB
+### Microservice 1: Mongo DB
 
 **Description:**
 
@@ -125,21 +142,21 @@ echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
 echo never | sudo tee /sys/kernel/mm/transparent_hugepage/defrag
 ```
 
-## Microservice 2: Twitter Stream Listener
+### Microservice 2: Twitter Stream Listener
 
 **Description:**
 
 - Storing the Tweets into Mongo DB
 - Configuration via `/CryptoCrawler/config.yaml` in Repo, with words to listen for, divided into sections (will be used to store tweets in different mongo-collections.)
 
-## Microservice 3: Crypto Price Crawler
+### Microservice 3: Crypto Price Crawler
 
 **Description:**
 
 - Based on jupyter/scipy-notebook Docker Image
 - We will probably use the [Cryptocompare](https://www.cryptocompare.com/api)-API to retrieve the current and historic prices of the currencies.
 
-## Microservice 4: Crypto Api Wrapper
+### Microservice 4: Crypto Api Wrapper
 
 **Description:**
 - Wraps the Histo-APIs of [Cryptocompare](https://www.cryptocompare.com/api) to use [HistoMinute](https://www.cryptocompare.com/api#-api-data-histominute-), [HistoHour](https://www.cryptocompare.com/api#-api-data-histohour-) and [HistoDay](https://www.cryptocompare.com/api#-api-data-histoday-) to a single API
@@ -178,7 +195,7 @@ URL-Parameters:
 
 example: http://********:8060/tweets?amount=30&topics=ethereum,bitcoin&from=1516974329&to=1516974379
 
-## Microservice 5: Jupyter Notebook
+### Microservice 5: Jupyter Notebook
 
 **Description:**
 
@@ -191,7 +208,7 @@ example: http://********:8060/tweets?amount=30&topics=ethereum,bitcoin&from=1516
 - Via AWS public DNS-Name + :8888\. E.g.: <https://ec2-34-227-176-103.compute-1.amazonaws.com:8888>
 - The DNS-Name will change! Find out current name via AWS Console, or use command on VM: `hostname -f`
 
-## Microservice 6: Dashboard
+### Microservice 6: Dashboard
 
 **Description:**
 
@@ -203,7 +220,7 @@ example: http://********:8060/tweets?amount=30&topics=ethereum,bitcoin&from=1516
 - Via AWS public DNS-Name + :8050\. E.g.: <https://ec2-34-227-176-103.compute-1.amazonaws.com:8050>
 - The DNS-Name will change! Find out current name via AWS Console, or use command on VM: `hostname -f`
 
-## Microservice 7: LDA Topic Identification
+### Microservice 7: LDA Topic Identification
 
 **Description:**
 
@@ -229,7 +246,7 @@ example: http://********:8060/tweets?amount=30&topics=ethereum,bitcoin&from=1516
   "num_topics": 6}
   ```
 
-## Microservice 8: Anomaly Detection
+### Microservice 8: Anomaly Detection
 
 **Description:**
 
@@ -260,7 +277,7 @@ example: http://********:8060/tweets?amount=30&topics=ethereum,bitcoin&from=1516
 
 ```
 
-## Microservice 9: Sentiment Analysis
+### Microservice 9: Sentiment Analysis
 
 **Description:**
 - Used to add sentiment information to all tweets in MongoDB
@@ -271,11 +288,9 @@ example: http://********:8060/tweets?amount=30&topics=ethereum,bitcoin&from=1516
 - **Sentiment** can be "neg" (score < 0), "pos" (score > 0) or "neu" (score = 0)
 
 
+## Useful info & commands
 
-
-# Useful info & commands
-
-## Docker
+### Docker
 
 **Cleanup Docker:**
 
@@ -292,7 +307,7 @@ example: http://********:8060/tweets?amount=30&topics=ethereum,bitcoin&from=1516
 - Find out IP address of mongo-container: `docker inspect $CONTAINER_NAME | grep IPAddress`
 - Use that IP-Address in MongoDB Client
 
-## Docker Compose
+### Docker Compose
 
 **Build & run containers in background:**
 
@@ -308,7 +323,7 @@ example: http://********:8060/tweets?amount=30&topics=ethereum,bitcoin&from=1516
 - `docker-compose build --no-cache`
 
 
-## Maintenance
+### Maintenance
 
 **Show size of MongoDB Directory:**
 
@@ -318,7 +333,7 @@ example: http://********:8060/tweets?amount=30&topics=ethereum,bitcoin&from=1516
 
 - `du -a / | sort -n -r | head -n 10`
 
-# Issues
+## Issues
 
 **Things that could be improved, if we had more time:**
 
